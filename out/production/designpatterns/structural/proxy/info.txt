@@ -1,0 +1,58 @@
+1>A Proxy can also be defined as a surrogate. In the real work a cheque or credit card is a proxy for what is
+in our bank account.  It can be used in place of cash, which is what is needed, and provides a means of
+accessing that cash when required. And that's exactly what the Proxy pattern does -
+controls and manage access to the object they are "protecting".
+
+2>Allows for object level access control by acting as a pass through entity or a placeholder object.
+  So it's quite a simple concept - to save on the amount of memory used, you might use a Proxy. Similarly, if
+  you want to control access to an object, the pattern becomes useful.
+
+3>the interface that the client knows about is the Subject. Both the Proxy and RealSubject objects implement
+    the Subject interface, but the client may not be able to access the RealSubject without going through the
+    Proxy. It's quite common that the Proxy would handle the creation of the RealSubject object,
+    but it will at least have a reference to it so that it can pass messages along.
+
+4>There are many different flavours of Proxy, depending on it's purpose. You may have a protection proxy,
+  to control access rights to an object.
+  A virtual proxy handles the case where an object might be expensive to create,
+  and a remote proxy controls access to a remote object.
+
+  For example, consider proxy servers.
+
+  (Acting as protection proxy,to control access rights to an object.)
+  A proxy server is a computer that acts as a gateway between a local network (e.g., all the computers at one
+  company or in one building) and a larger-scale network such as the Internet.
+  Proxy servers provide increased performance and security. In some cases, they monitor employees' use of
+  outside resources.A proxy server works by intercepting connections between sender and receiver.
+  All incoming data enters through one port and is forwarded to the rest of the network via another port.
+  By blocking direct access between two networks, proxy servers make it much more difficult for hackers to get
+  internal addresses and details of a private network.
+  In addition to restricting access from outside, this mechanism can prevent inside users from reaching
+  specific Internet resources (e.g., certain websites).
+
+  (A virtual proxy handles the case where an object might be expensive to create)
+  Proxies may also cache web pages. Each time an internal user requests a URL from outside, a temporary copy
+  is stored locally. The next time an internal user requests the same URL, the proxy can serve the local copy
+  instead of retrieving the original across the network, improving performance.
+
+
+
+5>When to use this Pattern?
+  This pattern is recommended when either of the following scenarios occur in your application:
+
+  The object being represented is external to the system.
+  Objects need to be created on demand.
+  Access control for the original object is required
+  Added functionality is required when an object is accessed.
+  Typically, you'll want to use a proxy when communication with a third party is an expensive operation,
+  perhaps over a network. The proxy would allow you to hold your data until you are ready to commit,
+  and can limit the amount of times that the communication is called.
+
+  The proxy is also useful if you want to decouple actual implementation code from the access to a
+  particular library. Proxy is also useful for access to large files, or graphics.
+  By using a proxy, you can delay loading the resource until you really need the data inside.
+  Without the concept of proxies, an application could be slow, and appear non-responsive.
+
+
+6>Used heavily in spring framework - spring aop and remoting
+

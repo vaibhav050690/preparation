@@ -1,0 +1,136 @@
+Adapter allows two classes of a different interface to work together, without changing any code on either side.
+
+By the way, Adapters are everywhere in real life, most commonly when we talk about Adapter, we mean
+electrical adapters.They are used to plug a different sized plug in a different sized socket.eg plug a 3 way
+plug in a 2 way socket.
+
+How to implement Adapter Design pattern in Java?
+
+There are two ways to implement Adapter design pattern in Java, one using Inheritance also known as Class
+Adapter pattern and other is using Composition, better known as Object Adapter pattern.
+
+In both cases, it's better to declare client interacting public methods in an interface, you may call it target
+interface.
+
+Target :- defines client-specific interface which client uses.
+Client :-uses target interface to call client specific api's
+Adaptee :-defines existing interface that does not adhere to traget interface and needs adapting
+Adapter :-adapts the functionality of adaptee to target interface by implementing target interface and using
+adaptee (either by inheritence or by composition).
+
+
+One advantage of using target interface to wrap client facing method in an Adapter, you create a loosely coupled
+design, where you can replace your Adapter with better implementation in the later stage of development.
+One of the cases where you want to use Adapter design pattern in Java program is while using a
+third-party library. By making sure, your program uses Adapter, which is in your control,
+rather than directly using third-party interface and classes, you can anytime replace third-party library,
+with similar, better performing API.
+
+
+Class Adapter :- Class Adapter pattern extends the original interface, which is incompatible to the client but
+provides the functionality needed by the client, and it also implements the target interface.
+Now, Adapter implements target method in such a way that it delegates actual work on original class,
+which Adapter get access by extending it.
+
+Object Adapter :- Similarly, in the case of Object Adapter pattern, which uses Composition for reusing code,
+it also implements target interface and uses object of the Original incompatible class to do all of its work.
+
+Since It's better to prefer composition over inheritance, I advise that you should stick with Object Adapter
+pattern.
+
+
+Example of Adapter pattern in Java - Map Adapter
+
+Let's see one more example of Adapter pattern in Java. If you remember the java.util.Map has no way to
+automatically load a two-dimensional array of objects into a Map as key-value pairs.
+We can create an adapter class that does this.
+
+Here is my implementation of Adapter pattern in Java to convert a two-dimensional array of objects into Map of
+key-value pairs
+
+
+Java Program to implement Adapter design Pattern
+
+/**
+ * Implementation of Adapter pattern in Java. The java.util.Map has no way to
+ * automatically load a two dimensional array of objects into a Map as key-value
+ * pairs. This Java program creates an adapter class that does this.
+ *
+ * @author WINDOWS 8
+ */
+
+public class Test {
+
+    public static void main(String args[]) {
+
+        Integer[][] squares = { {2, 4}, {3, 9}, {4, 16}};
+
+        MapAdapter adapter = new MapAdapter(squares);
+
+        System.out.println("adapter map contains : " + adapter);
+    }
+
+}
+
+/*
+ * This class is an adapter which allows to create a Map by providing a two
+ * dimensional array of keys and values. It extends AbstractMap class so that it
+ * become a Map and can be passed around where a Map is needed. All other method
+ * is implemented in AbstractMap except the adapter functionality which is
+ * implemented in constructor of this class.
+ */
+class MapAdapter extends AbstractMap {
+    private Map map;
+
+    public MapAdapter(Object[][] array) {
+        super();
+        map = new HashMap();
+        for(Object[] mapping : array){
+            map.put(mapping[0], mapping[1]);
+        }
+
+    }
+
+    @Override
+    public Set entrySet() {
+        return map.entrySet();
+    }
+
+}
+
+
+Output
+adapter map contains : {2=4, 3=9, 4=16}
+
+You can see that our MapAdapter extends AbstractMap to create a Map which can take a two-dimensional array and
+create a HashMap from that.
+
+
+Important points about Adapter Pattern in Java
+
+1) Adapter pattern is a general purpose pattern, much like Singleton, Factory, and Decorator and
+you will see a lot of examples of Adapter pattern through the code, one of the key benefits of using
+Adapter pattern in Java is reusing code, making incompatible interfaces work together and
+loose coupling because Adapter tends to encapsulate incompatible interface quite well.
+
+2) A lot of programmers confuse between Adapter and Decorator design pattern in Java, to some extent they are
+similar, especially object based adapter pattern but there is a subtle difference between Decorator and Adapter
+pattern in Java.
+Adapter just converts one interface to another, without adding additional functionalities,
+while Decorator adds new functionality into an interface.
+
+3) You can also use Adapter design pattern in Java for conversion classes, e.g. Suppose your client do all
+calculation in Miles and the library you are using expects Kilometers. In this case, you can write an
+Adapter class, which takes miles from Client, converts it to Kilometer and leverages external library
+methods for all calculation. While returning a result, it can convert KM back to miles and send the result to
+Client.
+
+4) Prefer Object-based Adapter design pattern than Class based, because former uses Composition for
+code re-use and more flexible than Inheritance based approach of Class based Adapter pattern in Java.
+
+
+5)There is one Adapter in the Java API that we all know, although it's quite hidden. You get is with a
+factory method from Arrays:
+
+  Arrays.asList(T... a)
+  The method returns an instance of Arrays.ArrayList and this object adapts the array to the List interface.

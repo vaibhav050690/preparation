@@ -1,0 +1,78 @@
+1>Lets say you have a List interface and Concrete class ArrayList and LinkedList and you want to provide sorting
+functionality to them, but sorting functionality would differ for both the classes,ed arraylist uses quick sort
+and linked list uses merge sort.
+The basic approach would to solve or model this problem would be to have sort() method defined in the List
+interface and let the clild classes implement it and provide concrete implementation, eg ArrayList sort() will
+have quick sort implementation and LinkedList sort() will have merge sort implementation.
+The problem with this approach is what if tomorrow we want the ArrayList to use HeapSort and LinkedList to use
+TreeSort, we will either have to change the ArrayList and LinkedList sort() method implemetation or will create
+a new ArrayListWithHeapSort class and provide heap sort implementation. This is a bad design and will lead to
+problems.
+
+Instead we can define a different SortingStrategy interface will define the sort() method and create different
+subclasses like BubbleSortStrategy,QuickSortStrategy,HeapSortStrategy.
+Now we will encapsulate an instance of this SortingStrategy interface in our List interface and this way we
+ can have different sorting strategy applied to different implementations of the List eg, ArrayList can now have
+any of BubbleSortStrategy,QuickSortStrategy,HeapSortStrategy and so on.
+
+
+2>The Strategy pattern is known as a behavioural pattern - it's used to manage algorithms,
+ relationships and responsibilities between objects. Thed efinition of Strategy provided in the original
+ Gang of Four book on DesignPatterns states:
+ Defines a set of encapsulated algorithms that can be swapped to carry out a specific behaviour
+
+3>Participants in UML:-
+1>Strategy:-Defines the interface common to all supported alogorithms.Context uses this interface to
+call the algorithms defined by ConcreteStrategies.
+2>ConcreteStrategy:-Each ConcreteStrategy implements an algorithm.
+3>Context:-Contains a reference to the Strategy object.It receives request from client about which strategy to
+ apply and delegates them to strategy object.The Context is not aware of the strategy implmentations.
+
+4>Strategy vs Command pattern:- In command pattern, it is the object itself which will decide which algorithm
+to pick based on its current state whereas in Strategy, the client passes the strategy to be used.
+
+5>Used in java api:-
+java.util.Comparator#compare(), executed by among others Collections#sort().
+javax.servlet.http.HttpServlet, the service() and all doXXX() methods take HttpServletRequest and
+HttpServletResponse and the implementor has to process them (and not to get hold of them as instance
+variables!).
+
+6>
+
+public class KeyedEntity<T extends Serializable> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO) -->Based on strategy given here, the generation type is picked
+    private T id;
+    .....
+
+
+package javax.persistence;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.persistence.GenerationType;
+
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface GeneratedValue {
+    GenerationType strategy() default GenerationType.AUTO;
+
+    String generator() default "";
+}
+
+
+
+package javax.persistence;
+
+public enum GenerationType {
+    TABLE,
+    SEQUENCE,
+    IDENTITY,
+    AUTO;
+
+    private GenerationType() {
+    }
+}

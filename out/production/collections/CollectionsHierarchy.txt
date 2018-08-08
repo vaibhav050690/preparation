@@ -1,0 +1,19 @@
+Collection Interface :-general purpose methods applicable to all collections.
+(int size(), boolean isEmpty(),boolean contains(Object element), boolean add(E element), boolean remove(Object element),
+and Iterator<E> iterator().
+
+It also contains methods that operate on entire collections, such as boolean
+containsAll(Collection<?> c),
+boolean addAll(Collection<? extends E> c),
+boolean removeAll(Collection<?> c),
+void clear().
+
+Additional methods for array operations (such as Object[] toArray() and <T> T[] toArray(T[] a) exist as well.
+
+
+Set Interface/SortedSet/NavigableSet:-HashSet,TreeSet,LinkedHashSet
+List Interface - ArrayList,LinkedList,Stack,Vector
+Queue Interface/Dequeue Inteface - LinkedList,PriorityQueue,ArrayDequeue
+
+Map/treemap/navigable map Interface - It is separate interface for key value pair
+

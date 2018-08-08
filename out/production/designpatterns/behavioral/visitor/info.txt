@@ -1,0 +1,46 @@
+1>It is used to simplify operations on grouping of related objects.These operations are performed by visitor
+rather than by the class being visited and hence these operations gets centralized in the visitor rather
+than the spread across the grouping of objects.
+2>Support we have a collection of different objects and our task is to print each element;
+One simple approach would be to iterate over the collection of objects and print it using toString() method.
+The above approach will not work if we have collection of different classes example ArrayList<HashSet>.
+Our code will look something like this:-
+
+public void printCollection(Collection collection){
+Iterator it = collection.iterator();
+while(it.hasNext()){
+Object o = it.next();
+if(o instanceOf Colllection){
+    printCollection((Collection o));
+}
+else{
+System.out.println(o.toString());
+}
+
+We can see here that there will be lot of conditional blocks in the code if the collection are of different types.
+
+3>What the Visitor pattern actually does is create an external class that uses data in the other classes.
+If you need to perform operations across a dispute set of objects, Visitor might be the pattern for you.
+The GoF book says that the Visitor pattern can provide additional functionality to a class without changing it.
+
+4>Participant classes in UML:-
+1>Visitor:-The core of this pattern is the Visitor interface. This interface defines a visit operation for
+each type of ConcreteElement in the object structure.
+2>ConcreteVisitor:- implements the operations defined in the Visitor interface.
+3>Element:- Element interface simply defines an accept method to allow the visitor to run some action over
+that element -
+4>ConcreteElement will implement this accept method.
+
+5>Where Would I Use This Pattern?
+The pattern should be used when you have distinct and unrelated operations to perform across a structure of
+objects.
+You may want to run operations against a set of objects with different interfaces.
+Visitors are also valuable if you have to perform a number of unrelated operations across the classes.
+
+Also adding new operation to perform upon the object is super easy.All you have to do is to create a new
+visitor and define the operation there.
+
+6>Watch Out for the Downsides
+  The arguments and return types for the visiting methods needs to be known in advance,
+  so the Visitor pattern is not good for situtations where these visited classes are subject to change.
+  Every time a new type of Element is added, every Visitor derived class must be amended.

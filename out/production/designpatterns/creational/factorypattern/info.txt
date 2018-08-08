@@ -1,0 +1,215 @@
+1>In Factory pattern, we create object without exposing the creation logic to client.
+Client uses some common interface (Factory) to create new type of object.
+
+2>Factory pattern is useful when the logic of the creation of objects is somewhat complex or it may take
+different parameters to return the object and the objects are needed at many different places in your code.
+In such cases if you create objects using new operator at different places with same logic, there will be
+code duplication.Instead we can define a factory which will handle this logic of object creation and will
+return the desired object.
+
+This pattern take out the responsibility of instantiation of a class from client program to the factory class.
+
+2>A design without factory:-
+
+Interface Loggable {
+    void print();
+}
+
+class FileLogger implements Loggable {
+    public void print() {
+        System.out.print("Logging in file")
+    }
+}
+
+class DatabaseLogger implements Loggable {
+    public void print() {
+            System.out.print("Logging in file")
+        }
+}
+
+class ConsoleLogger implements Loggable {
+    public void print() {
+            System.out.print("Logging in file")
+        }
+}
+
+public class Client {
+    psvm() {
+        Logger logger = getLogger("F");
+        logger.print();
+    }
+
+    Logger getLogger(String type) {
+        if(type == "F"){
+            return new FileLogger();
+        }
+        if(type == "C"){
+            return new ConsoleLogger();
+        }
+        if(type == "D"){
+            return new DatabaseLogger();
+        }
+    }
+
+}
+
+
+What is the problems with above design?
+
+As you must have observed in the above example, Client creates objects of either FileLogger or ConsoleLogger
+or DatabaseLogger based on some input during constructing its object.
+Say, library introduces a new class MongoLogger to incorporate MongoDb logging also.
+What would happen? Client will end up chaining a new else if in the conditional ladder to create objects of
+MongoLogger.Instead, we can move all these logics in the factory class and simply call the factory class
+with the reuired parameter to get the desired object.
+
+4>Lets consder another example of an UI application where you need a VerticalPanel with different UI elements
+attached to it(TextBox or Button or Checkboxes and any combination of these or all).
+Here instead of creating the VerticalPanel object in the Client with these combinations(using conditional if
+else logic ), you could simply create a Factory class which will provide you with the desired object.
+
+public class SSCriteriaWidgetCreatorFactory implements SSCriteriaWidgetCreator {
+
+  @Override
+  public Widget createCriteriaWidget(CriteriaDefinition criteriaDefinition) {
+    VerticalPanel verticalPanel = new VerticalPanel();
+    verticalPanel.setSpacing(5);
+    verticalPanel.add(new Label(criteriaDefinition.getTitle()));
+
+    switch (criteriaDefinition.getControlType()) {
+    case TEXTBOX:
+      verticalPanel.add(new SSTextBox(criteriaDefinition));
+      return verticalPanel;
+
+    case DATEPICKER:
+      verticalPanel.add(new SSDatePicker(criteriaDefinition.getKey()));
+      return verticalPanel;
+
+    default:
+      return null;
+    }
+  }
+}
+
+3> Factory Design Pattern Examples in JDK
+-java.util.Calendar(locale):- Returns a general-purpose number format for the specified locale
+- Similarly, ResourceBundle and NumberFormat getInstance(locale) methods uses Factory pattern.
+-valueOf() method in wrapper classes like Boolean, Integer etc., Integer.valueOf(1);
+-BeanFactory for creating instance of an object in spring.
+
+
+4> The problem here is that once we add a new concrete product call we should modify the Factory class.
+It is not very flexible and
+it violates open close principle. Of course we can subclass the factory class, but let's not forget that the
+factory class is usually used as a singleton. Subclassing it means replacing all the factory class references
+everywhere through the code.
+
+We can fix this problem by using Class Registration.
+
+
+-> Class Registration - using reflection:-
+For creating objects inside the factory class without knowing the object type we keep a map between the
+productID and the class type of the product. In this case when a new product is added to the application
+it has to be registered to the factory.This operation doesn't require any change in the factory class code.
+
+class ProductFactory
+{
+	private HashMap registeredProducts = new HashMap();
+
+	public void registerProduct (String productID, Class productClass)
+	{
+		registeredProducts.put(productID, productClass);
+	}
+
+	public Product createProduct(String productID)
+	{
+		Class productClass = (Class) registeredProducts.get(productID);
+		Constructor productConstructor = productClass.getDeclaredConstructor(new Class[] { String.class });
+		return (Product) productConstructor.newInstance(new Object[] { });
+	}
+}
+
+
+Registration done inside the product classes:
+
+class OneProduct extends Product
+{
+	static {
+	//its ideal to make factory class as Singleton.
+		Factory.instance().registerProduct("ID1",OneProduct.class);
+	}
+	...
+}
+
+
+Now, we have to make sure that the concrete product classes are loaded before they are required by the factory
+for registration
+(if they are not loaded they will not be registered in the factory and createProduct will return null).
+To ensure it we are going to use the Class.forName method right in the static section of the main class.
+This section is executed right after the main class is loaded. Class.forName is supposed to return a Class
+instance of the indicated class. If the class is not loaded by the compiler yet,
+it will be loaded when the Class.forName is invoked. Consequently the static block in each class will be executed when each class is
+loaded:
+
+class Main
+{
+	static
+	{
+		try
+		{
+			Class.forName("OneProduct");
+			Class.forName("AnotherProduct");
+		}
+		catch (ClassNotFoundException any)
+		{
+			any.printStackTrace();
+		}
+	}
+	public static void main(String args[]) throws PhoneCallNotRegisteredException
+	{
+		...
+	}
+}
+
+The main problem with reflection implementation is performance.
+
+
+->Class Registration - avoiding reflection
+
+Factory should be unaware of products, so we have to move the creation of objects outside of the factory to an object aware of the
+concrete products classes ie concrete class itself.
+
+We add a new abstract method in the product abstract class. Each concrete class will implement this method to create a new object of
+the same type as itself. We also have to change the registration method such that we'll register concrete product objects instead of
+Class objects.
+
+abstract class Product
+{
+	public abstract Product createProduct();
+	...
+}
+
+class OneProduct extends Product
+{
+	...
+	static
+	{
+		ProductFactory.instance().registerProduct("ID1", new OneProduct());
+	}
+	public OneProduct createProduct()
+	{
+		return new OneProduct();
+	}
+	...
+}
+
+class ProductFactory
+{
+	public void registerProduct(String productID, Product p)    {
+		rProducts.put(productID, p);
+	}
+
+	public Product createProduct(String productID){
+		((Product) registeredProducts.get(productID)).createProduct();
+	}
+}

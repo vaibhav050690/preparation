@@ -1,0 +1,145 @@
+refer this :- https://www.codeproject.com/Articles/492900/From-No-Factory-to-Factory-Method
+
+1>Abstract Factory pattern is another layer of abstraction over factory pattern.They work around a
+ super-factory which creates other factories.
+2>The AbstractFactory defines the interface that all of the concrete factories will need to implement in
+order to product Products.
+
+3>
+
+  ConcreteFactoryA and ConcreteFactoryB will both implement AbstractFactory,creating two seperate families
+  of product.
+
+  AbstractProductA and AbstractProductB are interfaces for the different types of product.
+
+  Each factory(ConcreteFactoryA and ConcreteFactoryB) will create one of each of these AbstractProducts.
+
+  The Client deals with AbstractFactory, AbstractProductA and AbstractProductB. It doesn't know anything about the implementations.
+  The actual implementation of AbstractFactory that the Client uses is determined at runtime.
+
+  As you can see, one of the main benefits of this pattern is that the client is totally decoupled from the
+  concrete products.
+  Also, new product families can be easily added into the system, by just adding in a new type of
+  ConcreteFactory that implements AbstractFactory, and creating the specific Product implementations.
+
+4>Design problem which abstarct factory pattern tries to solve:-
+Design Problems
+
+Creating Objects and Object Families
+
+How can a system support creating different families of objects so that which family to create can be selected
+and changed dynamically?
+
+How can a system be configured with a family of objects?
+
+And how can the whole family of objects be exchanged dynamically?
+
+How can the way objects are created (which classes are instantiated)
+be changed independently?
+
+How can a system be independent of how its objects are created?
+Creating Consistent Object Families
+
+How can be ensured that a system creates objects from only one of different
+families at a time?
+
+Refactoring Problems
+
+Distributed Creation Code
+
+How can instantiating concrete classes throughout an application be refactored?
+How can creation code that is distributed across many classes be centralized?
+
+Testing Problems
+Unit Tests
+How can creating objects and object families be designd so that object creation can be mocked easily for
+unit testing?
+
+
+4> Advantages:-
+ -> ISOLATION OF CONCRETE CLASS
+ Factory encapsulates the responsibility and the process of creating product objects, it isolates clients from
+ implementation classes.
+ Clients manipulate instances through their abstract interfaces. Product class names are isolated in the
+ implementation of the concrete factory; they do not appear in client code.
+
+5>Disadvantages:-
+  Difficult to support new kind of products: Extending abstract factories to produce new kinds of Products
+  isn’t easy. That’s because the AbstractFactory interface fixes the set of products that can be created.
+  Supporting new kinds of products requires changing the factory interface, which involves changing the
+  AbstractFactory class and all of its subclasses.
+
+6> usage in java api:-
+DocumentBuilderFactory is an abstract class having 2 different implemetations DocumentBuilderFactoryImpl.
+
+static DocumentBuilderFactory newInstance(String factoryClassName, ClassLoader classLoader)
+Obtain a new instance of a DocumentBuilderFactory from class name.
+
+
+
+7> Let’s take an example, Suppose we want to build a global car factory. If it was factory design pattern,
+   then it was suitable for a single location. But for this pattern, we need multiple locations and
+   some critical design changes.
+
+   We need car factories in each location like IndiaCarFactory, USACarFactory and DefaultCarFactory.
+
+   Now, our application should be smart enough to identify the location where it is being used,
+   so we should be able to use appropriate car factory without even knowing which car factory implementation
+   will be used internally.
+   This also saves us from someone calling wrong factory for a particular location.
+
+   Here we need another layer of abstraction which will identify the location and internally use correct car
+   factory implementation without even giving a single hint to user. This is exactly the problem,
+   which abstract factory pattern is used to solve.
+
+8> Other examples:-
+
+Phone Number Example
+
+The AbstractFactory class will contain methods for creating a new entry in the information manager for a
+phone number and for an address, methods that produce the abstract products Address and PhoneNumber,
+which belong to AbstractProduct classes.
+The AbstractProduct classes will define methods that these products support:for the address get and set
+methods for the street, city, region and postal code members and for the phone number get and set methods for the number.
+
+The ConcreteFactory and ConcreteProduct classes will implement the interfaces defined above and will appear in
+our example in the form of the USAddressFactory class and the USAddress and USPhoneNumber classes.
+For each new country that needs to be added to the application, a new set of concrete-type classes will be
+added.
+This way we can have the EnglandAddressFactory and the EnglandAddress and EnglandPhoneNumber
+that are files for English address information.
+
+
+
+Pizza Factory Example
+
+Another example, this time more simple and easier to understand, is the one of a pizza factory,
+which defines method names and returns types to make different kinds of pizza.
+The abstract factory can be named AbstractPizzaFactory, RomeConcretePizzaFactory
+and MilanConcretePizzaFactory being two extensions of the abstract class.
+The abstract factory will define types of toppings for pizza, like pepperoni, sausage or anchovy,
+and the concrete factories will implement only a set of the toppings, which are specific for the area and
+even if one topping is implemented in both concrete factories,
+the resulting pizzas will be different subclasses, each for the area it was implemented in.
+
+
+
+Look & Feel Example
+
+Look & Feel Abstract Factory is the most common example. For example, a GUI framework should support several
+look and feel themes, such as Motif and Windows look.
+Each style defines different looks and behaviors for each type of controls: Buttons and Edit Boxes.
+In order to avoid the hardociding it for each type of control we define an abstract class LookAndFeel.
+This calls will instantiate, depending on a configuration parameter in the application one of the concrete
+factories: WindowsLookAndFeel or MotifLookAndFeel.
+Each request for a new object will be delegated to the instatiated concrete factory which will return the
+controls with the specific flavor.
+
+
+Kingodom Example:-
+Suppose you need to model a kingdom. Every kindom has its own king,Soliders and castle(just for knowledge a large building, typically of the medieval period, fortified against
+attack with thick walls, battlements, towers, and often a moat).
+First we create different families of product ie King,Solider and Castle and then define an abstarct factory which defines a method getKingdom() and Different concrete factories for
+the respective kingdom implement this to generate different families of product (ie their own king,soilder and castle.)
+
+

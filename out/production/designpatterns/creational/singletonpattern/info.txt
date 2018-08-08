@@ -1,0 +1,459 @@
+1>The singleton pattern is a design pattern that restricts the instantiation of a class to one object.
+for example, a single DB connection shared by multiple objects as creating a separate DB connection for every object may be costly.
+Similarly, there can be a single configuration manager or error manager in an application that handles all problems instead of
+creating multiple managers.
+
+2>An implementation of singleton class should have following properties:
+  It should have only one instance.
+  Instance should be globally accessible.
+
+3>Singleton class can be instantiated by two methods:
+  Early initialization : In this method, class is initialized whether it is to be used or not.
+  Lazy initialization : In this method, class in initialized only when it is required.
+
+2>Method 1: Classic Implementation(Lazy)
+
+// Classical Java implementation of singleton
+// design pattern
+class Singleton
+{
+    private static Singleton obj;
+
+    // private constructor to force use of
+    // getInstance() to create Singleton object
+    private Singleton() {}
+
+    public static Singleton getInstance()
+    {
+        if (obj==null)
+            obj = new Singleton();
+        return obj;
+    }
+}
+
+Problem with this method is that it is not thread safe. The getInstane() can be called by more than 1 threads at a time hence
+resulting in more than one Singleton instance creation.
+
+3>Method 2: make getInstance() synchronized
+
+// Thread Synchronized Java implementation of
+// singleton design pattern
+class Singleton
+{
+    private static Singleton obj;
+
+    private Singleton() {}
+
+    // Only one thread can execute this at a time
+    public static synchronized Singleton getInstance()
+    {
+        if (obj==null)
+            obj = new Singleton();
+        return obj;
+    }
+}
+
+The main disadvantage of this is method is that using synchronized every time while creating the singleton object is expensive and
+may decrease the performance of your program.
+
+4>
+Method 3: Eager Instantiation
+
+// Static initializer based Java implementation of
+// singleton design pattern
+class Singleton
+{
+    private static Singleton obj = new Singleton();
+
+    private Singleton() {}
+
+    public static Singleton getInstance()
+    {
+        return obj;
+    }
+}
+Here we have created instance of singleton in static initializer. JVM executes static initializer when the class is loaded and hence
+this is guaranteed to be thread safe. Use this method only when your singleton class is light and is used throughout the execution
+of your program.
+
+5>
+Method 4 (Best): Use “Double Checked Locking”
+
+If you notice carefully once an object is created synchronization is no longer useful because now obj will not be null
+and any sequence
+of operations will lead to consistent results.
+So we will only acquire lock on the getInstance() once, when the obj is null. This way we only synchronize the first way through,
+just what we want.
+We have declared the obj volatile which ensures that multiple threads offer the obj variable correctly
+when it is being initialized to Singleton instance.
+
+
+// Double Checked Locking based Java implementation of
+// singleton design pattern
+class Singleton
+{
+    private volatile static Singleton obj;
+
+    private Singleton() {}
+
+    public static Singleton getInstance()
+    {
+        if (obj == null)
+        {
+            // To make thread safe
+            synchronized (Singleton.class)
+            {
+                // check again as multiple threads
+                // can reach above step
+                if (obj==null)
+                    obj = new Singleton();
+            }
+        }
+        return obj;
+    }
+}
+
+
+6>Bill Pugh Singleton Implementation:
+  // Java code for Bill Pugh Singleton Implementaion
+  public class GFG
+  {
+
+    private GFG()
+    {
+      // private constructor
+    }
+
+    // Inner class to provide instance of class
+    private static class BillPughSingleton
+    {
+      private static final GFG INSTANCE = new GFG();
+    }
+
+    public static GFG getInstance()
+    {
+      return BillPughSingleton.INSTANCE;
+    }
+  }
+
+  When the singleton class is loaded, inner class is not loaded and hence doesn’t create object when loading the class.
+  Inner class is created only when getInstance() method is called. So it may seem like eager initialization but it is lazy
+  initialization.
+  This is the most widely used approach as it doesn’t use synchronization.
+
+
+
+
+7>Examples of Singleton class:-
+java.lang.Runtime : Java provides a class Runtime in its lang package which is singleton.The current runtime can be obtained from the
+getRuntime() method.
+java.awt.Desktop : The Desktop class allows a Java application to launch associated applications registered on the native desktop to
+handle a URI or a file.
+All the beans in spring are by default singleton.
+
+8>Applications of Singleton classes:-
+>Hardware interface access:Singleton can be used in case external hardware resource usage limitation required
+e.g. Hardware printers where the print spooler can be made a singleton to avoid multiple concurrent accesses and creating deadlock.
+>Logger :We can use the logger utility class as a singleton and provide a global point of reference, so that each user
+can use this
+utility and no 2 users access it at same time.
+>Configuration File:Creates a single instance of the configuration file which can be accessed by multiple calls concurrently as it will provide
+static config data loaded into in-memory objects. The application only reads from the configuration file at the first time and
+there after from second call onwards the client applications read the data from in-memory objects.
+>Cache: We can use the cache as a singleton object as it can have a global point of reference and for all future calls to the
+cache object the client application will use the in-memory object.
+
+
+9> How to prevent Singleton Pattern from Reflection, Serialization and Cloning?
+
+1>Reflection:-
+// Java code to explain effect of Reflection
+// on Singleton property
+
+import java.lang.reflect.Constructor;
+
+// Singleton class
+class Singleton
+{
+    // public instance initialized when loading the class
+    public static Singleton instance = new Singleton();
+
+    private Singleton()
+    {
+        // private constructor
+    }
+}
+
+public class GFG
+{
+
+    public static void main(String[] args)
+    {
+        Singleton instance1 = Singleton.instance;
+        Singleton instance2 = null;
+        try
+        {
+            Constructor[] constructors =
+                    Singleton.class.getDeclaredConstructors();
+            for (Constructor constructor : constructors)
+            {
+                // Below code will destroy the singleton pattern
+                constructor.setAccessible(true);
+                instance2 = (Singleton) constructor.newInstance();
+                break;
+            }
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    System.out.println("instance1.hashCode():- "
+                                      + instance1.hashCode());
+    System.out.println("instance2.hashCode():- "
+                                      + instance2.hashCode());
+    }
+}
+
+Output:-
+instance1.hashCode():- 366712642
+instance2.hashCode():- 1829164700
+
+
+Overcome reflection issue: To overcome issue raised by reflection, enums are used because java ensures internally that enum value
+is instantiated only once. Since java Enums are globally accessible, they can be used for singletons.
+Its only drawback is that it is not flexible i.e it does not allow lazy initialization.
+
+//Java program for Enum type singleton
+public enum GFG
+{
+  INSTANCE;
+}
+
+As enums don’t have any constructor so it is not possible for Reflection to utilize it.
+Enums have their by-default constructor, we
+can’t invoke them by ourself. JVM handles the creation and invocation of enum constructors internally.
+As enums don’t give their constructor definition to the program, it is not possible for us to access them by
+Reflection also.Hence, reflection can’t break singleton property in case of enums.
+
+
+2>Serialization:-Serialization is used to convert an object of byte stream and save in a file or send over
+a network. Suppose you serialize an object of a singleton class. Then if you de-serialize that object it
+will create a new instance and hence break the singleton pattern.
+
+
+class Singleton implements Serializable
+{
+    // public instance initialized when loading the class
+    public static Singleton instance = new Singleton();
+
+    private Singleton()
+    {
+        // private constructor
+    }
+}
+
+
+public class GFG
+{
+
+    public static void main(String[] args)
+    {
+        try
+        {
+            Singleton instance1 = Singleton.instance;
+            ObjectOutput out
+                = new ObjectOutputStream(new FileOutputStream("file.text"));
+            out.writeObject(instance1);
+            out.close();
+
+            // deserailize from file to object
+            ObjectInput in
+                = new ObjectInputStream(new FileInputStream("file.text"));
+
+            Singleton instance2 = (Singleton) in.readObject();
+            in.close();
+
+            System.out.println("instance1 hashCode:- "
+                                                 + instance1.hashCode());
+            System.out.println("instance2 hashCode:- "
+                                                 + instance2.hashCode());
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+Output:-
+instance1 hashCode:- 1550089733
+instance2 hashCode:- 865113938
+
+As you can see, hashCode of both instances is different, hence there are 2 objects of a singleton class.
+
+Overcome serialization issue:- To overcome this issue, we have to implement method readResolve() method.
+
+class Singleton implements Serializable
+{
+    // public instance initialized when loading the class
+    public static Singleton instance = new Singleton();
+
+    private Singleton()
+    {
+        // private constructor
+    }
+
+    // implement readResolve method
+    protected Object readResolve()
+    {
+        return instance;
+    }
+}
+
+public class GFG
+{
+
+    public static void main(String[] args)
+    {
+        try
+        {
+            Singleton instance1 = Singleton.instance;
+            ObjectOutput out
+                = new ObjectOutputStream(new FileOutputStream("file.text"));
+            out.writeObject(instance1);
+            out.close();
+
+            // deserailize from file to object
+            ObjectInput in
+                = new ObjectInputStream(new FileInputStream("file.text"));
+            Singleton instance2 = (Singleton) in.readObject();
+            in.close();
+
+            System.out.println("instance1 hashCode:- "
+                                           + instance1.hashCode());
+            System.out.println("instance2 hashCode:- "
+                                           + instance2.hashCode());
+        }
+
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+Output:-
+instance1 hashCode:- 1550089733
+instance2 hashCode:- 1550089733
+
+
+
+3>Cloning: Cloning is a concept to create duplicate objects. Using clone we can create copy of object.
+Suppose, we create clone of a singleton object, then it wil create a copy that is there are two instances
+of a singleton class, hence the class is no more singleton.
+  // JAVA code to explain cloning
+  // issue with singleton
+  class SuperClass implements Cloneable
+  {
+    int i = 10;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException
+    {
+      return super.clone();
+    }
+  }
+
+  // Singleton class
+  class Singleton extends SuperClass
+  {
+    // public instance initialized when loading the class
+    public static Singleton instance = new Singleton();
+
+    private Singleton()
+    {
+      // private constructor
+    }
+  }
+
+  public class GFG
+  {
+    public static void main(String[] args) throws CloneNotSupportedException
+    {
+      Singleton instance1 = Singleton.instance;
+      Singleton instance2 = (Singleton) instance1.clone();
+      System.out.println("instance1 hashCode:- "
+                             + instance1.hashCode());
+      System.out.println("instance2 hashCode:- "
+                             + instance2.hashCode());
+    }
+  }
+  Output :-
+  instance1 hashCode:- 366712642
+  instance2 hashCode:- 1829164700
+
+
+  Overcome Cloning issue:- To overcome this issue, override clone() method and throw an exception from clone method that is
+  CloneNotSupportedException or return the same instance,
+
+  // JAVA code to explain overcome
+  // cloning issue with singleton
+  class SuperClass implements Cloneable
+  {
+    int i = 10;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException
+    {
+      return super.clone();
+    }
+  }
+
+  // Singleton class
+  class Singleton extends SuperClass
+  {
+    // public instance initialized when loading the class
+    public static Singleton instance = new Singleton();
+
+    private Singleton()
+    {
+      // private constructor
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException
+    {
+        return instance;
+    }
+  }
+
+  public class GFG
+  {
+    public static void main(String[] args) throws CloneNotSupportedException
+    {
+      Singleton instance1 = Singleton.instance;
+      Singleton instance2 = (Singleton) instance1.clone();
+      System.out.println("instance1 hashCode:- "
+                           + instance1.hashCode());
+      System.out.println("instance2 hashCode:- "
+                           + instance2.hashCode());
+    }
+  }
+
+
+
+
+
+10>Abstract Factory and Factory Methods implemented as singletons.
+
+   There are certain situations when the a factory should be unique. Having 2 factories might have undesired
+   effects when objects are created. To ensure that a factory is unique it should be implemented as a
+   singleton. By doing so we also avoid to instantiate the class before using it.
+
+   Let's assume that we design an application with a factory to generate new objects(Acount, Customer,
+   Site, Address objects) with their ids, in an multithreading environment. If the factory is instantiated
+   twice in 2 different threads then is possible to have
+   2 overlapping ids for 2 different objects. If we implement the Factory as a singleton we avoid this problem.
+   Combining Abstract Factory or Factory Method and Singleton design patterns is a common practice.

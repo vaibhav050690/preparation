@@ -1,0 +1,25 @@
+1>Provides a way to access the elements of an aggregate object without exposing its underlying representation.
+
+2>Why iterator pattern? Suppose there is a class say A which returns a list of names. And the client instantiates
+A and calls getName method of A to get the list and iterates over it.
+List<String> names = A.getNames();
+for(String name : names){
+    System.out.print(name);
+}
+However in this design, the client code is tightly coupled with the underlying data structure of the getName()
+method, ie if getName() method is changed and it starts returning say Set instead of list, then client code
+also needs to be changed.
+Iterator design pattern is used to solve this problem.It provides a uniform interface for traversing different
+aggregate structures (supports polymorphic iterations).
+It also supports multiple simultaneous traversals to collection ie we can create multiple independent
+iterations on the same collection.
+
+3>Participants in UML:-
+1>Iterator:- interface which defines basic protocols like first(),next(),hasNext() etc.
+2>ConcreteIterator
+3>Container:- Interface defining the aggregate.It should also define the createIterator() method.
+4>ConcreteContainer:- An implementation of collection.
+
+4>Used in java api:-
+All implementations of java.util.Iterator
+All implementations of java.util.Enumeration

@@ -1,0 +1,61 @@
+Should be used when you want your program be "Open For Extension” but also “Closed for Modification”.
+
+1>Defines the skeleton of an algorithm in a method, deferring some steps to subclasses.
+Template Method lets subclasses redefine certain steps of an algorithm without changing the
+algorithms structure.
+
+2>The AbstractClass contains the templateMethod(), which should be made final so that it cannot be overridden.
+  By making template method final, we make sure that none of the sub classes overrides them and cannot
+  change the algorithm steps or structure.
+  This template method makes use of other operations available in order to run the algorithm, but is
+  decoupled for the actual implementation of these methods. All operations used by this template method are
+  made abstract, so their implementation is deferred to subclasses.
+
+  The ConcreteClass implements all the operations required by the templateMethod that were defined as
+  abstract in the parent class. There can be many different ConcreteClasses.
+
+3>When broken down, there are four different types of methods used in the parent class:
+
+  Concrete methods:-Standard complete methods that are useful to the subclasses.
+  These methods are usually utiity methods.
+
+  Abstract methods:-Methods containing no implementation that must be implemented in subclasses.
+
+  Hook methods:-Methods containing a default implementation that may be overidden in some classes.
+  Hook methods are intended to be overridden, concrete methods are not.
+
+  Template methods:-A final method in abstarct base class that calls any of the methods listed above in order
+  to describe the algorithm without needing to implement the details.
+
+4> When Would I Use This Pattern?
+   The Template Method pattern is used when
+
+   When behaviour of an algorithm can vary, you let subclasses implement the behaviour through overriding
+
+   You want to avoid code duplication, implementing variations of the algorithm in subclasses
+
+   Template Method may not be an obvious choice in the beginning, but the usual sign that you should use the
+   pattern is when you find that you have two almost identical classes working on some logic.
+   At that stage, you should consider the power of the template method pattern to clean up your code.
+
+   As you can imagine, use of the Template Method is fairly common. You'll find it used in the Arrays class
+   uses it for sorting.
+
+5>Used in java api:-
+All non-abstract methods of java.util.AbstractList, java.util.AbstractSet and java.util.AbstractMap
+javax.servlet.http.HttpServlet, all the doXXX() methods by default sends a HTTP 405 "Method Not Allowed"
+error to the response. You're free to implement none or any of them.
+
+used extensively to deal with boilerplate repeated code (such as closing connections cleanly, etc..).
+For example in Spring JdbcTemplate, JmsTemplate, JpaTemplate.
+
+6>Some other real world examples:-
+Below is a simple process to parse and load data into Oracle. The overall process has three fixed steps:
+
+Load data from the source
+Parse the data
+Dump the data into Oracle
+
+Now you can alter the “Load” and “Parse” implementations to create a CSV file load process.
+The overall sequence of calling “Load”, “Parse”, and “Dump” will remain the same but we have the full
+liberty to change the implementation of “Load”, “Parse”, and “Dump”, thus creating a new process.
