@@ -1,0 +1,165 @@
+1>Decorator design pattern is used for adding additional functionalities to a particular object as opposed to
+the class of objects.Its easy to add functionality to an entire class of objects using inheritance but
+it is impossible to extend a single object this way.
+We can use inheritance or composition to extend the behavior of an object but this is done at compile time and
+its applicable to all the instances of the class. We can’t add any new functionality or remove any existing
+behavior at runtime – this is when Decorator pattern comes into picture.
+Suppose we want to implement a coffee shop system whch serves different type of coffees and along with coffees
+different kinds of addons – we can create interface Coffee to define the basic methods for all coffees and then
+we can have different coffees like Mocha/Expresso etc which implements the Coffee interface.
+Now Lets say customer orders Mocha coffee but with addon Chocolate or an expresso coffe with addon chocolate
+and soy milk.
+Problem with inheritance:-
+One design is to create new Classes using inheritance such as MochaWithChocolate or MochaWithSoy etc which will
+implement the Coffee interface. In this case we will be flooded with so many classes. Also if someone wants
+ExpressoWithChocolateAndMocha, we have to create a new class and that will be change at the compile time and
+its applicable to all the instances of the class. We can’t add any new functionality or remove any existing
+behavior at runtime – this is when Decorator pattern comes into picture.
+
+2>
+Now lets design the same coffee shop system using decorator pattern.
+
+1>Component :- It is an interface for those objects for which we to add functionality dynamically.In our case
+ coffee.
+
+ interface Coffee {
+    int cost();
+    String description();
+ }
+
+2>ConcreteComponent :- The base object that is going to be decorated but it does not have any knowledge of
+decoration. In our case these will be different types of Coffees.
+
+class Mocha implement Coffee {
+     int cost() {
+        return 2;
+     }
+
+     String description(){
+        return "Mocha";
+     }
+}
+
+class FilterCoffee implement Coffee {
+     int cost() {
+        return 3;
+     }
+
+     String description(){
+        return "FilterCoffee";
+     }
+}
+
+
+3>Decorator:- This is the main part. Decorators have a reference of Component object so that it can access
+the base behaviour and they also implements the Component interface hence they can be treated as Component
+itself. The Client code expecting Component will deal with Decorator without even noticing the difference.
+
+abstract class AddonDecorator implements Coffee {
+
+    //a reference of Component
+    Coffee coffee;
+
+    int cost();
+    String description();
+}
+
+
+4> ConcreteDecorator :- They actually do the task of adding additional responsibilities to the objects.
+
+class ChocolateDecorator extends AddonDecorator {
+
+    public ChocolateDecorator(Coffee coffee){
+        this.coffee = coffee;
+    }
+    int cost(){
+        return this.coffe.cost() + "1";
+    }
+
+    String description(){
+        return this.description() + "Chocolate";
+    }
+}
+
+
+class IceCreamDecorator extends AddonDecorator {
+    public IceCreamDecorator(Coffee coffee){
+            this.coffee = coffee;
+        }
+
+    int cost(){
+        return this.coffe.cost() + "6";
+    }
+
+    String description(){
+        return this.description() + "IceCream";
+    }
+}
+
+
+
+Now we can have a Mocha coffee with ice cream
+Coffee mocha = new IceCreamDecorator(new Mocha());
+
+we can also have a Mocha coffee with ice cream and Chocolate
+ Coffee mocha = new ChocolateDecorator (new IceCreamDecorator(new Mocha())); // since decorator is also a type
+ of coffee because we used inheritance
+
+ Note that we can create different coffee objects at run time.
+
+
+3>Examples in jave api:-
+
+InputStream is an abstract class. Most concrete implementations like BufferedInputStream, GzipInputStream,
+ObjectInputStream, etc. have a constructor that takes an instance of the same abstract class.
+That's the recognition key of the decorator pattern (this also applies to constructors taking an instance of
+the same interface).
+
+When such a constructor is used, all methods will delegate to the wrapped instance, with changes in the way
+the methods behave. For example, buffering the stream in memory beforehand, decompressing the stream beforehand
+or interpreting the stream differently. Some even have additional methods that finally also delegate
+further to the wrapped instance. Those methods decorate the wrapped instance with extra behaviour.
+
+Let's say that we have a bunch of serialized Java objects in a Gzipped file and that we want to read them
+quickly.
+
+First open an inputstream of it:
+
+FileInputStream fis = new FileInputStream("/objects.gz");
+We want speed, so let's buffer it in memory:
+BufferedInputStream bis = new BufferedInputStream(fis);
+The file is gzipped, so we need to ungzip it:
+GzipInputStream gis = new GzipInputStream(bis);
+We need to unserialize those Java objects:
+ObjectInputStream ois = new ObjectInputStream(gis);
+Now we can finally use it:
+
+SomeObject someObject = (SomeObject) ois.readObject();
+// ...
+The benefit is that you have a lot of freedom to decorate the stream using one or more various decorators to
+suit your needs. That's much better than having a single class for every possible combination like
+ObjectGzipBufferedFileInputStream, ObjectBufferedFileInputStream,GzipBufferedFileInputStream,
+ObjectGzipFileInputStream, ObjectFileInputStream, GzipFileInputStream, BufferedFileInputStream, etc.
+
+Note that when you're about to close the stream, just closing the outermost decorator is sufficient.
+It will delegate the close call all the way to the bottom.
+
+ois.close();
+
+
+4>Can be used for deprication when you try to depricate something but not at all the places at once.
+Lets say i have an object that is used at multiple places in the code. At some place , i want to
+depricate that objects method but not at all the places at once, so i will create a decorator which intercepts
+that method and depricates it in some way and i will use the instance of that particular decorator at the
+place where i want to depricate.
+
+
+Decorator versus Adapter :-
+Decorator is also called "Smart Proxy." This is used when you want to add functionality to an object,
+but not by extending that object's type. This allows you to do so at runtime.
+Example adding sugar to a coffee.
+
+Adapter is used when you have an abstract interface, and you want to map that interface to another object
+which has similar functional role, but a different interface.
+Example, Client needs tea but you have coffee but the process for making tea is similar to coffee
+Since tea and coffee are different interfaces, we will use Adapter here.

@@ -1,0 +1,36 @@
+1>Facade pattern sheilds the user from complex details of the system and provides them with a simplified
+view of a system which is easy to use.eg,While walking on a road , lets say u see a glass facing building.
+You don't know anything about its internal complexities like wiring,pipes etc. The glass face hides all of this
+and displays a good looking building.
+This is how facade pattern is used, it hides the complexities of a system and provide a simple interface to
+client from where the client can access the system.In java, JDBC is a very common example of facade pattern
+where we as users or client only create connection using java.sql.Connection interface,not concerned about
+the implementation. The implemention is left to vendor driver.
+
+2>Facade pattern promotes loose coupling.
+
+3>When to use facade:-
+I usually use a Facade in two scenarios:
+1>when I have several external or internal APIs and I want to simplify the interface to access the APIs:-
+In the first case I may have a complex API and I use the Facade to effectively hide the real API and expose
+to the rest of the application only the essential functionalities, the ones that I know are really needed by
+the application. By declaring a strict interface by yourself, you can protect the future you and all the other
+developers in your team from misunderstanding/misuse of the original API.
+2>when I want to protect my code against unstable/on progress API.
+In the second case Facade pattern protect yourself against possible interface changes in the future:
+whether you are developing a module in a complex application and at the same time other developers are
+developing other modules, or you are developing an application using an external API in beta phase,
+there is the possibility that some API you are interacting will evolve and change in the upcoming
+weeks/months/years. By encapsulating the interactions with the API inside a class of yours, possibly inside
+an external client library for example (speaking of Java, in a separate jar), when the API eventually
+will change, you will not need to change your main application, but only the client library that plays the
+role of Facade. So you will not need to recompile the main application, but just the client library.
+
+4>A booking system example
+  Let us consider an example of booking a package . Usually when you try to book a package  , the ticket
+  booking system interacts with many of subsystems. The various sub-systems may be flight , hotel and
+  cab booking . In addition this may also interact with many other sub systems.
+
+  In this case instead of client having the overhead of interacting with various other subsystems ,
+  we can introduce a facade layer  which interacts will all these subsystems. Finally once it get the
+  response from all the subsystems, it aggregates all these response and send the response back to the client.

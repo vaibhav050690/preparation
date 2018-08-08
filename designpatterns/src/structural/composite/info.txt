@@ -1,0 +1,28 @@
+Composite pattern is a structural design pattern where a tree like structure exists and identical operation needs
+to be performed on leaves aswell as nodes.The goal for composite pattern is to be able to treat individual
+objects (leaf) and composition of objects(sub trees) the same way.
+
+It consists of component, leaves and composite classes.
+Component - it is an abstract base class which specifies the operations that needs to be performed uniformly
+on the leaves and composite classes.
+Leaf:- the end node of the tree which will not have any child.
+Composite:- it is the subtree which consists of child components(leaves or composite classes).
+Client – Client manipulates the objects in the composition through the component interface.
+Client use the component class interface to interact with objects in the composition structure.
+If recipient is a leaf then request is handled directly. If recipient is a composite, then it usually forwards
+request to its child components, possibly performing additional operations before and after forwarding.
+
+When to use composite design pattern :-
+1> when the collection of objects should be treated similarly as single object.
+2> manipulating a single object should be similar to manipulating group of objects.
+3>tree structure for composite is noted
+
+Real Life example
+
+In an organization, It have general managers and under general managers, there can be managers and under
+managers there can be developers. Now you can set a tree structure and ask each node to perform
+common operation like getSalary().
+
+Another classic example for composite pattern will be file structures in operating system.A file system will
+have files, directories or composition of both.
+

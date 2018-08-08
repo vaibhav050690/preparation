@@ -1,0 +1,6 @@
+1>reverse singly linked list (iterative and recurrsive),reverse a doubly linked list
+2>Merge 2 sorted list (rec)
+3>pairWiseSwap
+4>reverseKBlocksInList
+5>clone a linked list with random pointer
+7>mergeSort

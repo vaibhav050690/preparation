@@ -1,0 +1,14 @@
+To enable garbage collection logging with Apache Tomcat:
+Create a file named setenv.sh in the $TOMCAT_HOME/bin directory.
+Add these entries to the file:
+
+export CATALINA_OPTS=" \
+
+-XX+PrintGCTimeStamps \
+-XX:+PrintGCDetails \
+-XX:+PrintGCApplicationStoppedTime \
+-XX:+PrintGCApplicationConcurrentTime \
+-XX:+PrintHeapAtGC \
+-verbose:gc
+-Xloggc:logs/gc.log"
+

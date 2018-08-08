@@ -1,0 +1,43 @@
+1>State design pattern is used when an Object change its behavior based on its internal state ie same
+action can perform different task based on its current state.
+2>If we have to change the behavior of an object based on its state, one way of doing that is we can have a
+state variable in the Object an then use if-else condition block to perform different actions based on the
+state. There will be lot of if and else blocks if we have many state to which an object can go from its current
+state.
+State design pattern is used to provide a systematic and loosely coupled way to achieve this through Context
+and State implementations.
+3>Participants in uml:-
+1>Context:- Defines an interface to client to interact. It maintains references to concrete state object
+  which may be used to define current state of object.
+2>State: Defines interface for declaring what each concrete state should do.(defines methods for all the actions)
+3> ConcreteState: Provides implementation for methods defined in State.
+
+4>Example:- Consider the StateDiagram.jpg. It shows the state diagram for entry gates in metro station.
+it has following actions:-
+1>SwipeCardSuccess
+2>SwipeCardFailed
+3>UserEnters
+
+and has 2 states:-
+1>Gate Open
+2>Gate closed
+
+The state diagram shows the transition of one state to another upon various actions.One way of modelling this
+would be to have to variables current state and action and have if else block in the your code to handle
+all the possible combination ie
+if(currentSate = "open"){
+    if(action = "userEnters"){
+        currentState = "closed";
+    }
+    else if("SwipeCardSuccess"){
+    ....
+}
+
+This code is very tightly coupled with client code.If tomorrow you want to add a new state, it requires another
+block in your if else condition but with State design pattern, you just need to create the new state which
+implements the State interface and define its functionality and call it from your gate context class,
+
+This Code will also have a lot of if else blocks. We can easily model this problem using state design pattern.
+
+5>Used in java api:-
+Container code in web servers which mainatins the life cycle of applications.

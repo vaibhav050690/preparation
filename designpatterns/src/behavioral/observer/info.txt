@@ -1,0 +1,49 @@
+1>In observer pattern(also known as publish/subscribe pattern), an object called as subject, maintains a
+collection of objects called as observers and when the subject changes, it notifies the observers.
+example:- producer consumer problem
+2>Participant's classes in UML:-
+1>Subject(also called as Listener):- Interface defining operations for adding and removing observers and
+ notifying the observer.
+2>ConcreteSubject:- Implements Subject. It manintains the state of the object and notifies its observer in case
+of change.
+3>Observer:-Interface defining operation to get notified.
+4>ConcreteObserver:- Concrete observer implementation.
+
+3>It provides abstract coupling between the observer and subject.The subject does not know concrete class of any
+observer.
+
+4> Push vs Poll mechanism:-Observer pattern solves the issues with traditional poll mechanism where
+the observer needs to continuously poll the subject to look for changes. This is a very inefficient way.
+
+5>Push and pull communication methods:-
+1>Push model:- The subject sends the change in state to the observer whether it uses it or not.This model will
+be inefficient when a large amount of data is send and the is not used.Another approach would be to send
+only the info required by the observer.In this case subject should have knowledge of each observers and what
+data are required by them.(Tight coupling)
+2>Pull Model:-Here subject just notifies the observer that the change in the state occurred and its the observer
+task to pull the required data from the subject.This is inefficient since it is 2 way communication
+problems may occurr in multithreaded environments.
+
+
+
+6>Examples :
+
+  -> Splitwise group : Anyone adds or updates any entry in the group - all members of group get a notification
+
+  -> Facebook : If one follows a post , he gets added to the observers & any further comments on the same
+  post , send a notification to all the other observers ; same as twitter or any other social media follow
+  use case .
+
+  - > When you subscribe to any website.You are one observer in this case who has subscribed to a website
+  (Subject) for getting notified about its post.
+
+  -> Cricket Display :- The scoreboard display, displays the average score etc information as per the current
+  status of the match. Whenever any score changes, the scoreboard gets refreshed. So, display board is the
+  observer here and Subject is the panel sending the current score status to the board.
+
+  -> Whatsapp Group :- Whenever any person sends any message in the group, all the people who are in the group
+   get notified.
+
+7>Used in java api:-
+java.util.Observer/java.util.Observable (rarely used in real world though)
+jpa Entity Listners:-@PostPersist,@PostUpdate,@PreRemove

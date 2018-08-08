@@ -1,0 +1,87 @@
+refer this for detailed explanation:-
+https://www.youtube.com/watch?v=9qA5kw8dcSU&list=PLrhzvIcii6GNjpARdnO4ueTUAVR9eMBpc&index=7
+
+1>Command design pattern is used to implement loose coupling in a request-response model.
+Definition:-Encapsulate a request as an object, thereby letting you parameterize clients with different
+requests, queue or log requests, and support undoable operations.
+
+2>Participants in UML:-
+1>Command:- It declares an interface for executing a command.It decouples the invoker from the receiver.
+2>ConcreteCommand:- Implements command interface.It has a receiver object and it performs the operation of
+binding the command with the respective receivers action.
+3>Receiver:-It is the class which has the actual implementation of a particular action.
+4>Invoker stores the concrete command object and issues a request by calling the execute command
+5>Client:-The client attaches the required commands to the receiver and uses invoker to invoke command.
+
+
+3>Examples of command pattern:-
+1>Multilevel undo:- If all user actions in a program are implemented as command object, the program can keep
+a stack of most recently executed command and when users want to undo an operation, the program can simply
+pops the most recently executed command and executes undo() method of it.
+2>Transactional Behaviour:-A database engine or a software installer can keep a list of operations to be performed.
+If any of them fails, all the other present in stack should be rollbacked.
+3>Progress bars:-Suppose a program has sequence of of commands which it executes in order and each command object
+has a getEstimatedDuration() method,the program can easily compute the total duration of commands which are
+yet to be processed in stack and can show in the progress bar.
+
+
+4>Command design pattern implementation:-
+Consider an example of a switch which can turn on the AC or turn off.Now AC can have different interfaces so
+the switch needs to be independent of AC or the receiver.
+1>Lets create our invoker class first which will be Switch in our case.Switch will have a stack which will
+keep the list of commands as and when send by the client and executes them.If client wants to undo an
+a command, we will simply get the last executed command from the stack and execute its undo method.
+
+2>Receiver in our case will be the AirConditioner interface which can have any number of concrete implementations
+, in our case AirConditionerImpl which will have the actual logic of switching on and off the AC.
+
+3>The command pattern converts the request itself into an object.This object is can be stored and passed like
+other object. Hence the key to the command pattern is the command interface.
+
+4>Now each concrete command class encapsulates the receiver object (AirConditioner) and provides a different
+implementation of the execute() method of the command interface.eg StartCommand class will turn on the AC
+in its execute method whereas StopCommand class will turn off the AC in its execute method.Same holds for
+revoke().
+
+
+5>The client attaches the required commands(like start and stop comands) to the receiver(AirConditioner)
+and uses invoker(switch) to invoke command.See here, that invoker is completely decoupled from the
+receiver and uses only the command interface, so that in future, it can easily used with other recieivers
+like fan , light etc.
+
+
+
+5>When Would I Use This Pattern?
+  The Command Pattern is useful when:
+
+  A history of requests is needed
+  You need callback functionality
+  Requests need to be handled at variant times or in variant orders
+  The invoker should be decoupled from the object handling the invocation.
+
+6>Think about a ecommerce application where you are adding an item to your cart.
+That form post to add the item to your cart is effectively a “command”.
+The Command Pattern is commonly seen in GUI code, such as handling actions of buttons, menu items, action
+links and also Java progress bars and wizards. It is also seen in Runnable related code.
+
+
+java api usages:-
+All implementations of java.lang.Runnable
+All implementations of javax.swing.Action
+
+public class ThreadCommand{
+    public static void main(String args[]){
+        Thread t = new Thread(new MyRunnable());
+        t.start();
+    }
+}
+class MyRunnable implements Runnable{
+    public void run(){
+        System.out.println("Running:"+Thread.currentThread().getName());
+    }
+}
+ThreadCommand is Client
+Runnable interface is Command
+MyRunnable play combined role of ConcreteCommand and Receiver
+Thread is Invoker with start() method calling ConcreteCommand implementaiton ( which calls run() method)
+MyRunnable play combined role of ConcreteCommand and Receiver

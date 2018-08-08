@@ -1,0 +1,17 @@
+1>Given an array of n positive elements, where all the numbers occurs even number of time except one which occur odd
+number of time, find that number.
+
+Xor all the elements, result will be the number occurring odd number of times.
+
+
+2>Given an array of size n, all the elements are in range (1 to n) and occur only once except 2 numbers which occurs
+twice.Find those numbers
+
+Solution1:- using counting technique
+
+Solution2:- using XOR.
+
+Solution2:- using formula:-
+Let the numbers be X and Y.
+X + Y = (sum of n natural numbers) - sum of all the elements in the array.
+X*Y= (product of n natural numbers=n!)/product of all the elements in the array.
